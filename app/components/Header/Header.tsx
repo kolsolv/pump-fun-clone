@@ -1,38 +1,37 @@
 'use client';
-import { useContext } from 'react';
 import styles from './header.module.css';
-import { useProvider } from '@/app/hooks/useProvider';
-import { AccountContext } from '@/app/context/AccountContext';
+import { Button } from '../Button/Button';
+import { useWeb3Context } from '@/app/context/Web3Context';
 
 export const Header = () => {
-  const { account, setAccount } = useContext(AccountContext);
-  const { provider } = useProvider();
+  const {
+    connectWallet,
+    disconnect,
+    state: { isAuthenticated, address }
+  } = useWeb3Context();
 
-  const handleConnect = async () => {
-    if (!provider) {
-      alert('Please install MetaMask!');
+  const toggleConnect = async () => {
+    if (isAuthenticated) {
+      disconnect();
       return;
     }
-
-    provider.send('eth_requestAccounts', []).then(async (accounts) => {
-      setAccount(accounts[0] || '');
-    });
+    connectWallet();
   };
 
   const getButtoonText = () => {
-    if (!account) {
+    if (!address) {
       return 'Connect Wallet';
     }
 
-    return '[' + account.slice(0, 6) + '...' + account.slice(-4) + ']';
+    return '[' + address.slice(0, 6) + '...' + address.slice(-4) + ']';
   };
 
   return (
     <header className={styles.header}>
-      <h1>pump.fun clone</h1>
-      <button onClick={handleConnect} className={styles.account}>
+      <h1 className={styles.logo}>pump.fun clone</h1>
+      <Button onClick={toggleConnect} className={styles.accountButton}>
         {getButtoonText()}
-      </button>
+      </Button>
     </header>
   );
 };

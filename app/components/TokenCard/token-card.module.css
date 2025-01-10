@@ -1,0 +1,62 @@
+.token {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--foreground);
+  padding: 10px;
+  cursor: pointer;
+
+  &:nth-child(1) {
+    animation: blink forwards 5s ease infinite;
+  }
+
+  &:hover {
+    border: 1px solid var(--foreground);
+  }
+}
+
+@keyframes blink {
+  0% {
+    background: yellow;
+    opacity: 0;
+  }
+
+  5% {
+    background: none;
+    opacity: 1;
+  }
+
+  95% {
+    background: none;
+    opacity: 1;
+  }
+
+  100% {
+    background: yellow;
+    opacity: 0;
+  }
+}
+
+.token__image {
+  margin-bottom: 10px;
+}
+
+.token__details {
+  font-family: "Arial";
+  font-weight: 400;
+  text-align: center;
+}
+
+.token__detailsRow {
+  font-size: 14px;
+  text-transform: lowercase;
+  width: 100%;
+  padding: 5px 0;
+}
+
+.token__mcap {
+  color: rgb(134 239 172);
+}
+
+.token__name {
+  font-size: 18px;
+}

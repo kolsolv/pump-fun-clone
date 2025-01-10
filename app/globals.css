@@ -33,28 +33,6 @@ h2 {
   font-size: 2rem;
 }
 
-.page {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-}
-
-/* HEADER STYLES */
-
-header {
-  grid-column: 2 / 12;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  padding: 2em 0;
-}
-
-header .brand {
-  font-family: "Nabla";
-  font-size: 2rem;
-  transform: rotate(-5deg);
-}
 
 /* BUTTON STYLES */
 

@@ -1,13 +1,15 @@
 import { Header } from './components/Header/Header';
-import { AccountContextProvider } from './context/AccountContext';
+import { MainContent } from './components/MainContent/MainContent';
+import Web3ContextProvider from './context/Web3Context';
 import styles from './page.module.css';
 
 export default function Home() {
   return (
     <div className={styles.page}>
-      <AccountContextProvider>
+      <Web3ContextProvider>
         <Header />
-      </AccountContextProvider>
+        <MainContent />
+      </Web3ContextProvider>
     </div>
   );
 }
