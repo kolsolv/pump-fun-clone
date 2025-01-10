@@ -8,10 +8,14 @@ import { useListToken } from '@/app/hooks/useListToken';
 import Spinner from '../Spinner/Spinner';
 
 interface ListTokenModalProps {
+  onList: () => void;
   onClose: () => void;
 }
 
-export const ListTokenModal: FC<ListTokenModalProps> = ({ onClose }) => {
+export const ListTokenModal: FC<ListTokenModalProps> = ({
+  onList,
+  onClose
+}) => {
   const { fee, isLoading: isFeeLoading } = useFactoryFee();
   const { listToken, isLoading: isListingToken } = useListToken();
 
@@ -22,6 +26,7 @@ export const ListTokenModal: FC<ListTokenModalProps> = ({ onClose }) => {
     const name = formData.get('name') as string;
     const ticker = formData.get('ticker') as string;
     await listToken(name, ticker, fee);
+    onList();
     onClose();
   };
 

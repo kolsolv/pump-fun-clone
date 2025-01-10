@@ -6,6 +6,8 @@ export const useListedTokens = () => {
   const factoryContract = useFactoryContract();
   const [listedTokens, setListedTokens] = useState<Token[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [firstTime, setFirstTime] = useState(true);
+  const [shouldRefetch, setShouldRefetch] = useState(false);
 
   const getListedTokens = useCallback(async () => {
     if (!factoryContract) return [];
@@ -36,12 +38,18 @@ export const useListedTokens = () => {
     } catch {
     } finally {
       setIsLoading(false);
+      setFirstTime(false);
+      setShouldRefetch(false);
     }
   }, [factoryContract]);
 
   useEffect(() => {
-    getListedTokens();
-  }, [getListedTokens]);
+    if (shouldRefetch || firstTime) {
+      getListedTokens();
+    }
+  }, [getListedTokens, shouldRefetch, firstTime]);
 
-  return { listedTokens, isLoading };
+  const refetch = () => setShouldRefetch(true);
+
+  return { listedTokens, isLoading, refetch };
 };

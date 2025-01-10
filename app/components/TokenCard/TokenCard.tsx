@@ -6,11 +6,12 @@ import classNames from 'classnames';
 
 interface TokenCardProps {
   token: Token;
+  onClick?: React.MouseEventHandler;
 }
 
-export const TokenCard: FC<TokenCardProps> = ({ token }) => {
+export const TokenCard: FC<TokenCardProps> = ({ onClick, token }) => {
   return (
-    <div className={styles.token}>
+    <div className={styles.token} onClick={onClick}>
       <div className={styles.token__details}>
         <img
           className={styles.token__image}
