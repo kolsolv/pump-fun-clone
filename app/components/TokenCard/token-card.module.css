@@ -6,7 +6,7 @@
   cursor: pointer;
 
   &:nth-child(1) {
-    animation: blink forwards 5s ease infinite;
+    animation: blink forwards 3s ease infinite;
   }
 
   &:hover {

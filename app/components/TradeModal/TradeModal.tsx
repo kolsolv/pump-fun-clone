@@ -1,5 +1,5 @@
-import { FC } from 'react';
-// import styles from './trade-modal.module.scss';
+import { FC, useState } from 'react';
+import styles from './trade-modal.module.css';
 import { Token } from '@/app/model/token';
 import { Button } from '../Button/Button';
 import { ethers } from 'ethers';
@@ -14,6 +14,7 @@ interface TradeModalProps {
 }
 
 export const TradeModal: FC<TradeModalProps> = ({ token, onBuy, onClose }) => {
+  const [amount, setAmount] = useState(0);
   const { tokenFinInfo, isLoading } = useTokenFinInfo(token);
   const { buyToken, isLoading: isBuying } = useBuyToken();
 
@@ -27,16 +28,26 @@ export const TradeModal: FC<TradeModalProps> = ({ token, onBuy, onClose }) => {
     onClose();
   };
 
+  const handleAmountChange = (amount: string) => {
+    setAmount(Number(amount));
+  };
+
   return (
-    <div className="trade">
+    <div className={styles.trade}>
       <h2>Trade</h2>
 
-      <div className="token__details">
-        <p className="name">{token.name}</p>
+      <div className={styles.token__details}>
+        <p className={styles.token__name}>{token.name}</p>
         <p>
           creator: {token.creator.slice(0, 6) + '...' + token.creator.slice(-4)}
         </p>
-        <img src={token.image} alt={token.name} width={256} height={256} />
+        <img
+          src={token.image}
+          alt={token.name}
+          width={256}
+          height={256}
+          className={styles.token__image}
+        />
         <p>market cap: {ethers.formatUnits(token.raised, 18)} ETH</p>
         {isLoading ? (
           <Spinner />
@@ -49,7 +60,7 @@ export const TradeModal: FC<TradeModalProps> = ({ token, onBuy, onClose }) => {
         {tokenFinInfo &&
         (token.sold >= tokenFinInfo.limit ||
           token.raised >= tokenFinInfo.target) ? (
-          <p className="disclaimer">target reached!</p>
+          <p className={styles.disclaimer}>target reached!</p>
         ) : (
           <form onSubmit={handleBuy}>
             <input
@@ -58,7 +69,20 @@ export const TradeModal: FC<TradeModalProps> = ({ token, onBuy, onClose }) => {
               min={1}
               max={10000}
               placeholder="1"
+              onChange={(e) => handleAmountChange(e.target.value)}
             />
+
+            {!!amount && (
+              <p>
+                total cost:{' '}
+                {ethers.formatUnits(
+                  BigInt(amount) * (tokenFinInfo?.price || 0n),
+                  18
+                )}{' '}
+                ETH
+              </p>
+            )}
+
             <Button type="submit" disabled={isBuying}>
               [ buy ]
             </Button>

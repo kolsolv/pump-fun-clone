@@ -13,7 +13,8 @@
 .listings__title {
   font-family: "Arial";
   font-weight: 800;
-  padding: 1em;
+  padding: 32px 0;
+  text-align: center;
 }
 
 .tokens {

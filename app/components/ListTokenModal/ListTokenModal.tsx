@@ -21,11 +21,11 @@ export const ListTokenModal: FC<ListTokenModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!fee) return;
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
     const ticker = formData.get('ticker') as string;
     const file = formData.get('token-image') as File;
+    if (!fee || !name || !ticker || !file) return;
 
     await listToken(name, ticker, file, fee);
     onList();
@@ -46,8 +46,16 @@ export const ListTokenModal: FC<ListTokenModalProps> = ({
       <form onSubmit={handleSubmit}>
         <input type="text" name="name" placeholder="name" />
         <input type="text" name="ticker" placeholder="ticker" />
-        <label className="form-label"> Choose File</label>
-        <input type="file" name="token-image" />
+
+        <label htmlFor="image-upload" className={styles.upload__label}>
+          Choose File
+        </label>
+        <input
+          id="image-upload"
+          className={styles.input__upload}
+          type="file"
+          name="token-image"
+        />
 
         {isListingToken ? <Spinner /> : <Button type="submit">[ list ]</Button>}
       </form>
