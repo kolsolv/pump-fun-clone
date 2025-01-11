@@ -18,10 +18,14 @@ export const useListToken = () => {
     fee: bigint
   ) => {
     if (!factoryContract || !name || !ticker || !tokenImage) return;
-    const { jwt, pinataApiKey } = await generateOneTimeJwt();
-    if (!jwt || !pinataApiKey) return;
-
     setIsLoading(true);
+
+    const { jwt, pinataApiKey } = await generateOneTimeJwt();
+    if (!jwt || !pinataApiKey) {
+      setIsLoading(false);
+      return;
+    }
+
     const ipfsHash = await uploadFileToIpfs(tokenImage, jwt);
     const revokeRes = await revokeOneTimeJwt(pinataApiKey);
 
@@ -29,7 +33,10 @@ export const useListToken = () => {
       console.log('Failed to revoke one-time JWT');
     }
 
-    if (!ipfsHash) return;
+    if (!ipfsHash) {
+      setIsLoading(false);
+      return;
+    }
     try {
       const tx = await factoryContract.create(name, ticker, ipfsHash, {
         value: fee
