@@ -97,6 +97,11 @@ export const FactoryAbi = [
         internalType: 'string',
         name: '_symbol',
         type: 'string'
+      },
+      {
+        internalType: 'string',
+        name: '_imageHash',
+        type: 'string'
       }
     ],
     name: 'create',
@@ -147,6 +152,25 @@ export const FactoryAbi = [
       }
     ],
     stateMutability: 'pure',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_index',
+        type: 'uint256'
+      }
+    ],
+    name: 'getTokenImageUri',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string'
+      }
+    ],
+    stateMutability: 'view',
     type: 'function'
   },
   {

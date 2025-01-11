@@ -25,7 +25,9 @@ export const ListTokenModal: FC<ListTokenModalProps> = ({
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
     const ticker = formData.get('ticker') as string;
-    await listToken(name, ticker, fee);
+    const file = formData.get('token-image') as File;
+
+    await listToken(name, ticker, file, fee);
     onList();
     onClose();
   };
@@ -44,6 +46,9 @@ export const ListTokenModal: FC<ListTokenModalProps> = ({
       <form onSubmit={handleSubmit}>
         <input type="text" name="name" placeholder="name" />
         <input type="text" name="ticker" placeholder="ticker" />
+        <label className="form-label"> Choose File</label>
+        <input type="file" name="token-image" />
+
         {isListingToken ? <Spinner /> : <Button type="submit">[ list ]</Button>}
       </form>
 

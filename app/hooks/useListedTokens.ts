@@ -15,26 +15,30 @@ export const useListedTokens = () => {
     setIsLoading(true);
     try {
       const totalTokens = Number(await factoryContract.totalTokens());
-      const tokens = (await Promise.all(
-        Array.from({ length: totalTokens }).map((_, index) =>
-          factoryContract.getTokenSale(index)
-        )
-      )) as Token[];
+      const tokenSales = (
+        (await Promise.all(
+          Array.from({ length: totalTokens }).map((_, index) =>
+            factoryContract.getTokenSale(index)
+          )
+        )) || []
+      ).map((tokenSale) => ({
+        token: tokenSale.token,
+        name: tokenSale.name,
+        creator: tokenSale.creator,
+        sold: tokenSale.sold,
+        raised: tokenSale.raised,
+        isOpen: tokenSale.isOpen
+      })) as Token[];
 
-      setListedTokens(
-        tokens
-          .map((tokenSale) => ({
-            token: tokenSale.token,
-            name: tokenSale.name,
-            creator: tokenSale.creator,
-            sold: tokenSale.sold,
-            raised: tokenSale.raised,
-            isOpen: tokenSale.isOpen,
-            image:
-              'https://pump.mypinata.cloud/ipfs/Qmbtwhgc1WndvcRJ2Dps7nKVfLgLbfuiwf56Ac8n2X5k3U?img-width=128&img-dpr=2&img-onerror=redirect'
-          }))
-          .reverse()
+      const tokenImages = await Promise.all(
+        tokenSales.map((_, index) => factoryContract.getTokenImageUri(index))
       );
+      const tokenSalesWithImages = tokenSales.map((tokenSale, index) => ({
+        ...tokenSale,
+        image: 'https://gateway.pinata.cloud/ipfs/' + tokenImages[index]
+      }));
+
+      setListedTokens(tokenSalesWithImages.reverse());
     } catch {
     } finally {
       setIsLoading(false);
