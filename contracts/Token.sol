@@ -6,16 +6,23 @@ import {ERC20} from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 contract Token is ERC20 {
   address payable public owner;
   address public creator;
+  string public imageHash;
 
   constructor(
     address _creator,
     string memory _name,
     string memory _symbol,
-    uint256 _totalSupply
+    uint256 _totalSupply,
+    string memory _imageHash
   ) ERC20(_name, _symbol) {
     owner = payable(msg.sender);
     creator = _creator;
 
     _mint(msg.sender, _totalSupply);
+    imageHash = _imageHash;
+  }
+
+  function getImageHash() public view returns (string memory) {
+    return imageHash;
   }
 }

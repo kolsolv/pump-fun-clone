@@ -34,9 +34,25 @@ contract Factory {
     return tokenToSale[tokens[_index]];
   }
 
-  function create(string memory _name, string memory _symbol) external payable {
+  function getTokenImageUri(
+    uint256 _index
+  ) public view returns (string memory) {
+    return Token(tokens[_index]).imageHash();
+  }
+
+  function create(
+    string memory _name,
+    string memory _symbol,
+    string memory _imageHash
+  ) external payable {
     require(msg.value >= fee, 'Insufficient fee');
-    Token token = new Token(msg.sender, _name, _symbol, 1_000_000 ether);
+    Token token = new Token(
+      msg.sender,
+      _name,
+      _symbol,
+      1_000_000 ether,
+      _imageHash
+    );
     tokens.push(address(token));
     totalTokens++;
     TokenSale memory sale = TokenSale(

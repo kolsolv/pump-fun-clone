@@ -2,6 +2,9 @@ import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 
+const imageIpfsHash =
+  'bafkreiaqrjehdhgi4aj537j6qbrbz6mplfzcq7jvn5mmv76frmfhowdhlu';
+
 describe('Factory', function () {
   const FEE = ethers.parseUnits('0.01', 18);
 
@@ -12,7 +15,7 @@ describe('Factory', function () {
 
     const transaction = await factory
       .connect(creator)
-      .create('TestToken', 'TTT', { value: FEE });
+      .create('TestToken', 'TTT', imageIpfsHash, { value: FEE });
     await transaction.wait();
     const tokenAddress = await factory.tokens(0);
     const token = await ethers.getContractAt('Token', tokenAddress);
@@ -61,11 +64,9 @@ describe('Factory', function () {
     it('Should check the fee', async function () {
       const { factory, creator } = await loadFixture(deployFactoryFixture);
       await expect(
-        factory
-          .connect(creator)
-          .create('TestToken', 'TTT', {
-            value: FEE - ethers.parseUnits('0.01', 18)
-          })
+        factory.connect(creator).create('TestToken', 'TTT', imageIpfsHash, {
+          value: FEE - ethers.parseUnits('0.01', 18)
+        })
       ).to.be.revertedWith('Insufficient fee');
     });
 
@@ -95,6 +96,11 @@ describe('Factory', function () {
       expect(sale.sold).to.equal(0);
       expect(sale.raised).to.equal(0);
       expect(sale.isOpen).to.equal(true);
+    });
+
+    it('Should add image', async () => {
+      const { factory } = await loadFixture(deployFactoryFixture);
+      expect(await factory.getTokenImageUri(0)).to.equal(imageIpfsHash);
     });
   });
 
@@ -136,11 +142,9 @@ describe('Factory', function () {
     it('Should check the price', async () => {
       const { factory, token, buyer } = await loadFixture(buyTokensFixture);
       await expect(
-        factory
-          .connect(buyer)
-          .buy(await token.getAddress(), AMOUNT, {
-            value: COST - ethers.parseUnits('0.01', 18)
-          })
+        factory.connect(buyer).buy(await token.getAddress(), AMOUNT, {
+          value: COST - ethers.parseUnits('0.01', 18)
+        })
       ).to.be.revertedWith('Insufficient funds');
     });
   });
