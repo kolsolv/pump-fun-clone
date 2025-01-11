@@ -1,6 +1,7 @@
 {
   "name": "pump-fun-clone",
   "version": "0.1.0",
+  "author": "kolsolv",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

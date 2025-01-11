@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useFactoryContract } from './useFactoryContract';
 import { Token } from '../model/token';
 
+const IPFS_URL = 'https://gateway.pinata.cloud/ipfs/';
+
 export const useListedTokens = () => {
   const factoryContract = useFactoryContract();
   const [listedTokens, setListedTokens] = useState<Token[]>([]);
@@ -35,7 +37,7 @@ export const useListedTokens = () => {
       );
       const tokenSalesWithImages = tokenSales.map((tokenSale, index) => ({
         ...tokenSale,
-        image: 'https://gateway.pinata.cloud/ipfs/' + tokenImages[index]
+        image: IPFS_URL + tokenImages[index]
       }));
 
       setListedTokens(tokenSalesWithImages.reverse());
