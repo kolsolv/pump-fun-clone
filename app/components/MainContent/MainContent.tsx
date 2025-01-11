@@ -19,11 +19,11 @@ export const MainContent = () => {
   const [currentToken, setCurrentToken] = useState<Token | null>(null);
 
   const getCreateButtonText = () => {
-    if (!factoryContract) {
-      return 'Conract not deployed';
-    }
     if (!state.address) {
       return 'Please connect your wallet';
+    }
+    if (!factoryContract) {
+      return 'Contract not deployed';
     }
     return '[ create token ]';
   };
