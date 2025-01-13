@@ -13,7 +13,6 @@ export const useListedTokens = () => {
 
   const getListedTokens = useCallback(async () => {
     if (!factoryContract) return [];
-
     setIsLoading(true);
     try {
       const totalTokens = Number(await factoryContract.totalTokens());
@@ -55,7 +54,7 @@ export const useListedTokens = () => {
     }
   }, [getListedTokens, shouldRefetch, firstTime]);
 
-  const refetch = () => setShouldRefetch(true);
+  const refetch = useCallback(() => setShouldRefetch(true), []);
 
   return { listedTokens, isLoading, refetch };
 };

@@ -1,5 +1,5 @@
 'use client';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Button } from '../Button/Button';
 import styles from './list.module.css';
 import { ethers } from 'ethers';
@@ -18,6 +18,7 @@ export const ListTokenModal: FC<ListTokenModalProps> = ({
 }) => {
   const { fee, isLoading: isFeeLoading } = useFactoryFee();
   const { listToken, isLoading: isListingToken } = useListToken();
+  const [currentFileName, setCurrentFileName] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,6 +31,21 @@ export const ListTokenModal: FC<ListTokenModalProps> = ({
     await listToken(name, ticker, file, fee);
     onList();
     onClose();
+  };
+
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setCurrentFileName(null);
+      return;
+    }
+    setCurrentFileName(file.name);
+  };
+
+  const truncateFileName = (fileName: string) => {
+    return fileName.length > 15
+      ? fileName.slice(0, 10) + '...' + fileName.slice(-4)
+      : fileName;
   };
 
   return (
@@ -48,13 +64,14 @@ export const ListTokenModal: FC<ListTokenModalProps> = ({
         <input type="text" name="ticker" placeholder="ticker" />
 
         <label htmlFor="image-upload" className={styles.upload__label}>
-          Choose File
+          {!currentFileName ? 'Choose File' : truncateFileName(currentFileName)}
         </label>
         <input
           id="image-upload"
           className={styles.input__upload}
           type="file"
           name="token-image"
+          onChange={onFileChange}
         />
 
         {isListingToken ? <Spinner /> : <Button type="submit">[ list ]</Button>}

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../Button/Button';
 import styles from './main.module.css';
 import { ListTokenModal } from '../ListTokenModal/ListTokenModal';
@@ -19,6 +19,9 @@ export const MainContent = () => {
   const [currentToken, setCurrentToken] = useState<Token | null>(null);
 
   const getCreateButtonText = () => {
+    if (state.currentChain !== 17000) {
+      return 'Please switch to Holesky Testnet';
+    }
     if (!state.address) {
       return 'Please connect your wallet';
     }
@@ -28,18 +31,29 @@ export const MainContent = () => {
     return '[ create token ]';
   };
 
+  useEffect(() => {
+    if (state.currentChain) {
+      refetch();
+    }
+  }, [state.currentChain, factoryContract, refetch]);
+
   return (
     <main className={styles.main}>
       <Button
         onClick={() =>
-          factoryContract && state.address && setShowCreateToken(true)
+          factoryContract &&
+          state.currentChain === 17000 &&
+          state.address &&
+          setShowCreateToken(true)
         }
       >
         {getCreateButtonText()}
       </Button>
 
       <div className={styles.listings}>
-        <h1 className={styles.listings__title}>new listings</h1>
+        {!!listedTokens.length && (
+          <h1 className={styles.listings__title}>new listings</h1>
+        )}
 
         <div className={styles.tokens}>
           {listedTokens.map((token) => (
