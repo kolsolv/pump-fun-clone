@@ -16,5 +16,10 @@ export const config: Config = {
     factory: {
       address: '0xD26A7e3796ec5065fc3732B3C1c87b566b4c386B'
     }
+  },
+  mainnet: {
+    factory: {
+      address: 'mainnet address'
+    }
   }
 };
